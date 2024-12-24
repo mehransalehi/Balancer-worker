@@ -1,11 +1,8 @@
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-// import { TaskCreate } from "./endpoints/taskCreate";
-// import { TaskDelete } from "./endpoints/taskDelete";
-// import { TaskFetch } from "./endpoints/taskFetch";
-// import { TaskList } from "./endpoints/taskList";
 
 import { SymbolCreate } from "endpoints/symbolCreate";
+import { SymbolFetch } from "endpoints/symbolFetch";
 
 // Start a Hono app
 const app = new Hono();
@@ -17,13 +14,31 @@ const AUTH_TOKEN =
 // Middleware to check token
 const authMiddleware = (c, next) => {
   const token = c.req.header("Authorization");
-  /* console.log(token);
   // Check if the token matches
-  if (!token || token !== `Bearer ${AUTH_TOKEN}`) {
+  if (!token || token !== `${AUTH_TOKEN}`) {
     return c.json({ error: "Unauthorized" }, 401); // Respond with 401 if unauthorized
-  } */
+  }
 
   // Proceed to the next handler
+  return next();
+};
+
+// CORS Middleware to handle preflight and actual requests
+const corsMiddleware = (c, next) => {
+  // Set CORS headers
+  c.res.headers.set('Access-Control-Allow-Origin', '*'); // Allow all origins
+  c.res.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allowed methods
+  c.res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allowed headers
+
+  // Handle preflight requests (OPTIONS)
+  if (c.req.method === 'OPTIONS') {
+    // Return a 204 No Content response without a body
+    return new Response(null, {
+      status: 204,
+      headers: c.res.headers, // Include CORS headers
+    });
+  }
+
   return next();
 };
 
@@ -31,7 +46,8 @@ const authMiddleware = (c, next) => {
 const openapi = fromHono(app, {
   docs_url: "/",
 });
-
+// Apply CORS middleware globally
+app.use(corsMiddleware);
 // Apply middleware to all endpoints
 openapi.use(authMiddleware);
 
@@ -42,6 +58,7 @@ openapi.use(authMiddleware);
 // openapi.delete("/api/tasks/:taskSlug", TaskDelete);
 
 openapi.post("/api/symbols", SymbolCreate);
+openapi.get("/api/symbols", SymbolFetch);
 
 // Export the Hono app
 export default app;
