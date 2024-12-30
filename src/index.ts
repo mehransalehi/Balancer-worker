@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { SymbolCreate } from "endpoints/symbolCreate";
 import { SymbolFetch } from "endpoints/symbolFetch";
 import { keyFetch } from "endpoints/keyFetch";
+import { SymbolDelete } from "endpoints/symbolDelete";
 
 // Start a Hono app
 const app = new Hono();
@@ -61,6 +62,7 @@ openapi.use(authMiddleware);
 openapi.post("/api/symbols", SymbolCreate);
 openapi.get("/api/symbols", SymbolFetch);
 openapi.get("/api/keys", keyFetch);
+openapi.delete("/api/symbols/:symbolId", SymbolDelete);
 
 // Export the Hono app
 export default app;
