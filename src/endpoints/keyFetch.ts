@@ -46,8 +46,8 @@ export class keyFetch extends OpenAPIRoute {
         },
     };
 
-    access_id = '7847A08FB08947EFBC73203AC2DB2765';
-    secret_key = 'A8884935839A26ACF602CDA4A265436E386E2187048A7538';
+    access_id = '';
+    secret_key = '';
 
 
     async handle(c) {

@@ -1,56 +1,56 @@
 import { Bool, OpenAPIRoute, Str } from "chanfana";
 import { z } from "zod";
 import { Symbol } from "../types";
-import { createClient } from '@supabase/supabase-js'
-
-// Create a single supabase client for interacting with your database
-const supabase = createClient('https://zktvjhoiyxghtyuyxoyv.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprdHZqaG9peXhnaHR5dXl4b3l2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ5NTM5NDcsImV4cCI6MjA1MDUyOTk0N30.L5n-c4r4EZISAnrNned9iOrE-KzOctDAeLJ6RTR6ZXo')
-
+import { createClient } from "@supabase/supabase-js";
 
 
 export class SymbolFetch extends OpenAPIRoute {
-	schema = {
-		tags: ["Tasks"],
-		summary: "Get All Symbols",
-		request: {
-		},
-		responses: {
-			"200": {
-				description: "Returns all symbols",
-				content: {
-					"application/json": {
-						schema: z.object({
-							series: z.object({
-								success: Bool(),
-								result: z.object({
-									assets: z.array(Symbol),
-								}),
-							}),
-						}),
-					},
-				},
-			},
-			"404": {
-				description: "Task not found",
-				content: {
-					"application/json": {
-						schema: z.object({
-							series: z.object({
-								success: Bool(),
-								error: Str(),
-							}),
-						}),
-					},
-				},
-			},
-		},
-	};
+  schema = {
+    tags: ["Tasks"],
+    summary: "Get All Symbols",
+    request: {},
+    responses: {
+      "200": {
+        description: "Returns all symbols",
+        content: {
+          "application/json": {
+            schema: z.object({
+              series: z.object({
+                success: Bool(),
+                result: z.object({
+                  assets: z.array(Symbol),
+                }),
+              }),
+            }),
+          },
+        },
+      },
+      "404": {
+        description: "Task not found",
+        content: {
+          "application/json": {
+            schema: z.object({
+              series: z.object({
+                success: Bool(),
+                error: Str(),
+              }),
+            }),
+          },
+        },
+      },
+    },
+  };
 
-	async handle(c) {
-		const returnData = await supabase
-			.from('assets')
-			.select();
-		/* const returnData = {
+  async handle(c) {
+    const SUPABASE_SECRET = c.env.SUPABASE_SECRET;
+
+    // Create a single supabase client for interacting with your database
+    const supabase = createClient(
+      "https://zktvjhoiyxghtyuyxoyv.supabase.co",
+      SUPABASE_SECRET
+    );
+    const returnData = await supabase.from("assets").select();
+    /* const returnData = {
 			data: [
 				{
 					id: 6,
@@ -82,9 +82,9 @@ export class SymbolFetch extends OpenAPIRoute {
 				}
 			]
 		} */
-		return {
-			success: true,
-			assets: returnData.data,
-		};
-	}
+    return {
+      success: true,
+      assets: returnData.data,
+    };
+  }
 }

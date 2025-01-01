@@ -3,11 +3,6 @@ import { z } from "zod";
 import { Symbol } from "../types";
 import { createClient } from "@supabase/supabase-js";
 
-// Create a single supabase client for interacting with your database
-const supabase = createClient(
-  "https://zktvjhoiyxghtyuyxoyv.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprdHZqaG9peXhnaHR5dXl4b3l2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ5NTM5NDcsImV4cCI6MjA1MDUyOTk0N30.L5n-c4r4EZISAnrNned9iOrE-KzOctDAeLJ6RTR6ZXo"
-);
 
 export class SymbolDelete extends OpenAPIRoute {
   schema = {
@@ -38,6 +33,13 @@ export class SymbolDelete extends OpenAPIRoute {
   };
 
   async handle(c) {
+    const SUPABASE_SECRET = c.env.SUPABASE_SECRET;
+
+    // Create a single supabase client for interacting with your database
+    const supabase = createClient(
+      "https://zktvjhoiyxghtyuyxoyv.supabase.co",
+      SUPABASE_SECRET
+    );
     // Get validated data
     const userData = await this.getValidatedData<typeof this.schema>();
 

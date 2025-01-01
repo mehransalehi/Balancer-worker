@@ -6,8 +6,12 @@ import { SymbolFetch } from "endpoints/symbolFetch";
 import { keyFetch } from "endpoints/keyFetch";
 import { SymbolDelete } from "endpoints/symbolDelete";
 
+type Bindings = {
+  SUPABASE_SECRET: string
+}
+
 // Start a Hono app
-const app = new Hono();
+const app = new Hono<{ Bindings: Bindings }>();
 
 //Token for auth
 const AUTH_TOKEN =
