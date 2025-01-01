@@ -52,13 +52,14 @@ export class SymbolCreate extends OpenAPIRoute {
 			const { data, error } = await supabase
 				.from('assets')
 				.select()
-			const targetAsset = data ? data.find(asset => { return asset.symbol == symbolToCreate.symbol && asset.group == symbolToCreate.group }) : false;
-			if (targetAsset) {
+			const targetAsset = data ? data.find(asset => { return asset.id == symbolToCreate.id}) : false;
+			if (targetAsset && symbolToCreate.id>0) {
 				const { error } = await supabase
 					.from('assets')
-					.update({ amount: symbolToCreate.amount })
+					.update({ amount: symbolToCreate.amount , symbol : symbolToCreate.symbol })
 					.eq('id', targetAsset.id);
 			} else {
+				delete symbolToCreate.id;
 				const {  error } = await supabase
 					.from('assets')
 					.insert(symbolToCreate);

@@ -82,7 +82,6 @@ export class SymbolFetch extends OpenAPIRoute {
 				}
 			]
 		} */
-		console.log(returnData.data);
 		return {
 			success: true,
 			assets: returnData.data,
